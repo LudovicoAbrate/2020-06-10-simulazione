@@ -84,9 +84,33 @@ public class ImdbDAO {
 		}
 	}
 	
-	
-	
-	
-	
+	public List<String> listGeneri(){
+		String sql =  "select  distinct genre as genere "
+				+ "from movies_genres";
+		List<String> result = new ArrayList<String>();
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+
+				String generi = new String(res.getString("genere"));
+				
+				result.add(generi);
+			}
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 }
+	
+	
+	
+	
+
