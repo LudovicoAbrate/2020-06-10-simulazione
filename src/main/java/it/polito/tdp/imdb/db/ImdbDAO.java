@@ -112,9 +112,9 @@ public class ImdbDAO {
 	
 	public List<Actor> getVertici(String genre,  Map<Integer,Actor> idMap){
 		String sql = "select distinct r.actor_id as id "
-				+ "from roles as r , movies as m, movies_genres as mg "
+				+ "from roles r , movies m, movies_genres mg "
 				+ "where r.movie_id = m.id "
-				+ "and  mg.movie_id = r.movie_id "
+				+ "and  mg.movie_id = m.id "
 				+ "and mg.genre = ? ";
 		
 		
