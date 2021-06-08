@@ -60,14 +60,15 @@ public class FXMLController {
     	String genre = boxGenere.getValue();
     	
     	if( genre == null) {
-    		txtResult.appendText("Seleziona un genere");
+    		txtResult.clear();
+    		txtResult.appendText("Seleziona un genere\n");
     		return;
     	
     	}
     	this.model.creaGrafo(genre);
-    	txtResult.appendText("grafo creato");
+    	txtResult.appendText("grafo creato\n");
     	txtResult.appendText(" vertici: "  + model.nVertici());
-    	txtResult.appendText(" vertici: "  + model.nArchi());
+    	txtResult.appendText(" archi : "  + model.nArchi());
     	
     	
     	this.boxAttore.getItems().addAll(model.getTuttiAttori());

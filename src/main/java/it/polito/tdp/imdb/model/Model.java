@@ -32,9 +32,9 @@ public class Model {
 	
 	public void creaGrafo(String genre) {
 	
-		this.grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+		grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 	
-	     Graphs.addAllVertices(this.grafo, dao.getVertici(genre, idMap));
+	     Graphs.addAllVertices(grafo, dao.getVertici(genre, idMap));
 		
 	
 	
@@ -42,11 +42,11 @@ public class Model {
 	}
 	
 	public int nVertici() {
-		return this.grafo.vertexSet().size();
+		return grafo.vertexSet().size();
 	}
 	
 	public int nArchi() {
-		return this.grafo.edgeSet().size();
+		return grafo.edgeSet().size();
 		
 	}
 	
