@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import it.polito.tdp.imdb.model.Actor;
 import it.polito.tdp.imdb.model.Director;
 import it.polito.tdp.imdb.model.Movie;
@@ -108,7 +110,38 @@ public class ImdbDAO {
 		}
 	}
 	
-}
+	public List<Actor> getVertici( Map<Integer,Actor> idMap){
+		String sql = "select distinct r.actor_id as id "
+				+ "from roles as r , movies as m, movies_genres as mg "
+				+ "where r.movie_id = m.id "
+				+ "and  mg.movie_id = r.movie_id "
+				+ "and mg.genre = ? ";
+		
+		
+		List<Actor> result = new ArrayList<Actor>();
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, "genre");
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+
+				Actor actor = new Actor(res.getInt("id"), res.getString("first_name"), res.getString("last_name"),
+						res.getString("gender"));
+				
+				result.add(actor);
+			}
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	}
+
 	
 	
 	
