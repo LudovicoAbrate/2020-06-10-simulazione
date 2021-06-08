@@ -1,5 +1,8 @@
 package it.polito.tdp.imdb.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +19,7 @@ public class Model {
 	
 	private ImdbDAO dao;
 	private Map<Integer,Actor> idMap;
-	private Graph grafo;
+	private Graph<Actor,DefaultWeightedEdge> grafo;
 	
 	
 	public Model() {
@@ -24,13 +27,14 @@ public class Model {
 		
 		this.dao = new ImdbDAO();
 		this.idMap = new HashMap<>();
-
+        dao.listAllActors(idMap);
 	}
 	
-	public void creaGrafo(Actor a) {
-	grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+	public void creaGrafo(String genre) {
 	
-	Graphs.addAllVertices(this.grafo, dao.getVertici(idMap));
+		this.grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+	
+	     Graphs.addAllVertices(this.grafo, dao.getVertici(idMap));
 		
 	
 	
@@ -52,6 +56,19 @@ public class Model {
 	}
 	
 	public List<Actor> getTuttiAttori(){
-		return dao.listAllActors();
+		List<Actor> attori = new ArrayList<>(grafo.vertexSet());
+		Collections.sort(attori, new Comparator<Actor>(){
+
+			@Override
+			public int compare(Actor a1, Actor a2) {
+				
+				return a1.lastName.compareTo(a2.lastName);
+			}
+			
+			
+		});
+	
+		
+		return attori;
 	}
 }

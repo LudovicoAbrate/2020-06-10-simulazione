@@ -57,13 +57,14 @@ public class FXMLController {
     	
     	txtResult.clear();
     	
-    	Actor a = boxAttore.getValue();
-    	if( a == null) {
-    		txtResult.appendText("Seleziona un attore");
+    	String genre = boxGenere.getValue();
+    	
+    	if( genre == null) {
+    		txtResult.appendText("Seleziona un genere");
     		return;
     	
     	}
-    	this.model.creaGrafo(a);
+    	this.model.creaGrafo(genre);
     	txtResult.appendText("grafo creato");
     	txtResult.appendText("grafo creato con vertici: "  + model.nVertici() + " e archi: " + model.nArchi() );
     	
