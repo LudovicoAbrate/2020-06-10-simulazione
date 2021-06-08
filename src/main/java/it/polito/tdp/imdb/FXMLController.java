@@ -66,9 +66,11 @@ public class FXMLController {
     	}
     	this.model.creaGrafo(genre);
     	txtResult.appendText("grafo creato");
-    	txtResult.appendText("grafo creato con vertici: "  + model.nVertici() + " e archi: " + model.nArchi() );
+    	txtResult.appendText(" vertici: "  + model.nVertici());
+    	txtResult.appendText(" vertici: "  + model.nArchi());
     	
     	
+    	this.boxAttore.getItems().addAll(model.getTuttiAttori());
 
     }
 
@@ -92,6 +94,6 @@ public class FXMLController {
     public void setModel(Model model) {
     	this.model = model;
     	this.boxGenere.getItems().addAll(model.getTuttiGeneri());
-    	this.boxAttore.getItems().addAll(model.getTuttiAttori());
+    	
     }
 }

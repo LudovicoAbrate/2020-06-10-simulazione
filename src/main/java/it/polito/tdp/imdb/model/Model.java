@@ -34,7 +34,7 @@ public class Model {
 	
 		this.grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 	
-	     Graphs.addAllVertices(this.grafo, dao.getVertici(idMap));
+	     Graphs.addAllVertices(this.grafo, dao.getVertici(genre, idMap));
 		
 	
 	
@@ -56,7 +56,7 @@ public class Model {
 	}
 	
 	public List<Actor> getTuttiAttori(){
-		List<Actor> attori = new ArrayList<>(grafo.vertexSet());
+		List<Actor> attori = dao.listAllActors(idMap);
 		Collections.sort(attori, new Comparator<Actor>(){
 
 			@Override

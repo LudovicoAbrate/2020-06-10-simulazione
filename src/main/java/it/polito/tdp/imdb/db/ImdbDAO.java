@@ -110,7 +110,7 @@ public class ImdbDAO {
 		}
 	}
 	
-	public List<Actor> getVertici( Map<Integer,Actor> idMap){
+	public List<Actor> getVertici(String genre,  Map<Integer,Actor> idMap){
 		String sql = "select distinct r.actor_id as id "
 				+ "from roles as r , movies as m, movies_genres as mg "
 				+ "where r.movie_id = m.id "
@@ -123,14 +123,13 @@ public class ImdbDAO {
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, "genre");
+			st.setString(1, genre);
 			ResultSet res = st.executeQuery();
 			while (res.next()) {
 
-				Actor actor = new Actor(res.getInt("id"), res.getString("first_name"), res.getString("last_name"),
-						res.getString("gender"));
+				if(idMap.containsKey(res.getInt("id")))
 				
-				result.add(actor);
+				result.add(idMap.get(res.getInt("id")));
 			}
 			conn.close();
 			return result;
