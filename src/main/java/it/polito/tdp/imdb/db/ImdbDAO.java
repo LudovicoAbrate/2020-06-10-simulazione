@@ -27,7 +27,7 @@ public class ImdbDAO {
 				Actor actor = new Actor(res.getInt("id"), res.getString("first_name"), res.getString("last_name"),
 						res.getString("gender"));
 				
-				result.add(actor);
+				idMap.put(actor.getId(), actor);
 			}
 			conn.close();
 			return result;
