@@ -6,9 +6,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
@@ -35,12 +37,45 @@ public class Model {
 		grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 	
 	     Graphs.addAllVertices(grafo, dao.getVertici(genre, idMap));
-
 	     
 	     
-	     
+	     for ( Adiacenza a : dao.getAdiacenze(genre, idMap)){
+	    	 if(grafo.getEdge(a.getA1(), a.getA2()) == null) {
+	    		 Graphs.addEdgeWithVertices(this.grafo, a.getA1(), a.getA2(), a.getPeso());
+	    	 }
+	     }
 	}
 	
+
+	 
+	     public List<Actor> getAttoriConnessi(Actor tendina) {
+	 		
+	    	 ConnectivityInspector<Actor, DefaultWeightedEdge> ci = new ConnectivityInspector<Actor, DefaultWeightedEdge>(grafo);
+	 			List<Actor> actors = new ArrayList<>(ci.connectedSetOf(tendina));
+	 			actors.remove(tendina);
+	 			
+	 			Collections.sort(actors, new Comparator<Actor>() {
+
+	 				@Override
+	 				public int compare(Actor o1, Actor o2) {
+	 					// TODO Auto-generated method stub
+	 					return o1.getLastName().compareTo(o2.getLastName());
+	 				}
+	 				
+	 			});
+	 			return actors;
+	 		}
+	 	
+	 		
+	 		
+	     
+	
+	
+	private Set<Actor> getVerticiTendina() {
+		
+		return this.grafo.vertexSet();
+	}
+
 	public int nVertici() {
 		return grafo.vertexSet().size();
 	}
@@ -72,3 +107,4 @@ public class Model {
 		return attori;
 	}
 }
+
