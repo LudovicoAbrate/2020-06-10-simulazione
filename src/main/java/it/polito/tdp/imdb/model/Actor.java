@@ -39,10 +39,7 @@ public class Actor{
 		this.gender = gender;
 	}
 
-	@Override
-	public String toString() {
-		return lastName + ", " + firstName + " (" + id + ")";
-	}
+	
 
 	@Override
 	public int hashCode() {
@@ -69,5 +66,7 @@ public class Actor{
 		return true;
 	}
 
-	
+	public String toString() {
+		return lastName + " , " + firstName + " (" + id + ") \n";
+	}
 }

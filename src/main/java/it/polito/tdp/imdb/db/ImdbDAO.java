@@ -89,93 +89,109 @@ public class ImdbDAO {
 		}
 	}
 	
-	public List<String> listGeneri(){
-		String sql =  "select  distinct genre as genere "
-				+ "from movies_genres";
-		List<String> result = new ArrayList<String>();
-		Connection conn = DBConnect.getConnection();
+public List<String> getGeneri(){
+	
+	String sql = "select distinct genre "
+			+ "from movies_genres "
+			+ "order by genre asc ";
+	
+	List<String> result = new ArrayList<String>();
+	Connection conn = DBConnect.getConnection();
 
-		try {
-			PreparedStatement st = conn.prepareStatement(sql);
-			ResultSet res = st.executeQuery();
-			while (res.next()) {
+	try {
+		PreparedStatement st = conn.prepareStatement(sql);
+		ResultSet res = st.executeQuery();
+		while (res.next()) {
 
-				String generi = new String(res.getString("genere"));
-				
-				result.add(generi);
-			}
-			conn.close();
-			return result;
+			String s = new String( res.getString("genre"));
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			result.add(s);
 		}
+		conn.close();
+		return result;
+		
+	} catch (SQLException e) {
+		e.printStackTrace();
+		return null;
 	}
 	
-	public List<Actor> getVertici(String genre,  Map<Integer,Actor> idMap){
-		String sql = "select distinct r.actor_id as id "
-				+ "from roles r , movies m, movies_genres mg "
-				+ "where r.movie_id = m.id "
-				+ "and  mg.movie_id = m.id "
-				+ "and mg.genre = ? ";
-		
-		
-		List<Actor> result = new ArrayList<Actor>();
-		Connection conn = DBConnect.getConnection();
+}
 
-		try {
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, genre);
-			ResultSet res = st.executeQuery();
-			while (res.next()) {
 
-				if(idMap.containsKey(res.getInt("id")))
-				
-				result.add(idMap.get(res.getInt("id")));
-			}
-			conn.close();
-			return result;
+public List<Actor> getVertici(String genere){
+	
+	String sql = "select distinct a.* "
+			+ "from movies_genres mg , actors a , roles r "
+			+ "where mg.movie_id = r.movie_id "
+			+ "and a.id = r.actor_id "
+			+ "and mg.genre = ? " ;
+	
+	List<Actor> result = new ArrayList<Actor>();
+	Connection conn = DBConnect.getConnection();
+
+	try {
+		PreparedStatement st = conn.prepareStatement(sql);
+		st.setString(1, genere);
+		ResultSet res = st.executeQuery();
+		while (res.next()) {
+
+			Actor actor = new Actor(res.getInt("id"), res.getString("first_name"), res.getString("last_name"),
+					res.getString("gender"));
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			result.add(actor);
+			
+			
 		}
+		conn.close();
+		return result;
+		
+	} catch (SQLException e) {
+		e.printStackTrace();
+		return null;
 	}
 	
-	public List<Adiacenza>  getAdiacenze(String genre,Map<Integer,Actor> idMap) {
-		
-		
-		String sql= "select r1.actor_id as attore1 , r2.actor_id as attore2 , COUNT( r1.movie_id) as peso "
-				+ "from roles r1 , roles r2 , movies_genres mg "
-				+ "where r1.actor_id > r2.actor_id "
-				+ "and r1.movie_id = r2.movie_id "
-				+ "and mg.movie_id = r1.movie_id "
-				+ "and mg.genre= ? "
-				+ "group by r1.actor_id, r2.actor_id ";
-		
-		List<Adiacenza> result = new ArrayList<Adiacenza>();
-		Connection conn = DBConnect.getConnection();
+	
+}
 
-		try {
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, genre);
-			ResultSet res = st.executeQuery();
-			while (res.next()) {
+public List<Adiacenza> getAdiacenze(String genere,Map<Integer,Actor> idMap ){
+	
+	String sql = "select r1.actor_id as a1, r2.actor_id as a2, COUNT(r1.movie_id) as peso "
+			+ "from movies_genres mg, roles r1,roles r2 "
+			+ "where r1.actor_id > r2.actor_id "
+			+ "and r1.movie_id = r2.movie_id "
+			+ "and r1.movie_id = mg.movie_id "
+			+ "and mg.genre = ? "
+			+ "group by a1,a2 ";
+	
+	List<Adiacenza> result = new ArrayList<Adiacenza>();
+	Connection conn = DBConnect.getConnection();
 
-				if(idMap.containsKey(res.getInt("attore1"))  && idMap.containsKey(res.getInt("attore2"))) {
-					result.add( new Adiacenza(idMap.get(res.getInt("attore1")), idMap.get(res.getInt("attore2")), res.getDouble("peso")));
-					 
-				}
-			}
-			conn.close();
-			return result;
+	try {
+		PreparedStatement st = conn.prepareStatement(sql);
+		st.setString(1, genere);
+		ResultSet res = st.executeQuery();
+	
+		while (res.next()) {
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			Actor a1 = idMap.get(res.getInt("a1"));
+			Actor a2 = idMap.get(res.getInt("a2"));
+			
+			if(a1 != null && a2!= null) {
+			Adiacenza a  = new Adiacenza( a1, a2,res.getDouble("peso"));
+			
+			result.add(a);
+			
+			}
 		}
+		conn.close();
+		return result;
+		
+	} catch (SQLException e) {
+		e.printStackTrace();
+		return null;
 	}
+	
+}
 	
 	}
 	

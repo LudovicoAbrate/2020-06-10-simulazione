@@ -51,17 +51,20 @@ public class FXMLController {
     @FXML
     void doAttoriSimili(ActionEvent event) {
     	
-    	Actor attoreScelta= boxAttore.getValue();
-    	if(attoreScelta==null) {
-    		txtResult.appendText("seleziona un attore");
-    		return;
+    	
+    	Actor attore = this.boxAttore.getValue();
+    	
+    	txtResult.appendText("Attori simili a : " + attore +"\n");
+    	
+    	for (Actor a :model.getAttoriConnessi(attore)) {
+    		
+    		txtResult.appendText(a.toString());
+    		
     	}
     	
-    	txtResult.appendText("ATTORI SIMILI A "+attoreScelta+"\n");
-    	List<Actor> result = this.model.getAttoriConnessi(attoreScelta);
-    	for(Actor a: result) {
-    		txtResult.appendText(a.toString()+"\n");
-    	}
+
+    	
+    	
     
 
     }
@@ -69,24 +72,18 @@ public class FXMLController {
     @FXML
     void doCreaGrafo(ActionEvent event) {
     	
-    	txtResult.clear();
-    	
-    	String genre = boxGenere.getValue();
-    	
-    	if( genre == null) {
-    		txtResult.clear();
-    		txtResult.appendText("Seleziona un genere\n");
-    		return;
-    	
-    	}
-    	this.model.creaGrafo(genre);
-    	txtResult.appendText("grafo creato\n");
-    	txtResult.appendText(" vertici: "  + model.nVertici());
-    	txtResult.appendText(" archi : "  + model.nArchi());
     	
     	
-    	this.boxAttore.getItems().addAll(model.getTuttiAttori());
-
+    	String genere = boxGenere.getValue();
+    	
+    	this.model.creaGrafo( genere);
+    	
+		   txtResult.appendText("grafo creato: "+"\n");
+		   txtResult.appendText("# VERTICI: "+this.model.nVertici()+"\n");
+		   txtResult.appendText("# ARCHI: "+this.model.nArchi()+"\n");
+  
+		  this.boxAttore.getItems().addAll(model.getVertici());
+    	
     }
 
     @FXML
@@ -108,7 +105,8 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
-    	this.boxGenere.getItems().addAll(model.getTuttiGeneri());
+    	this.boxGenere.getItems().addAll(this.model.getGeneri());
+    	
     	
     }
 }
